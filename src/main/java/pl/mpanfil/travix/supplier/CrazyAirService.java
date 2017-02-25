@@ -10,6 +10,7 @@ import pl.mpanfil.travix.SearchParams;
 import pl.mpanfil.travix.SearchResult;
 import pl.mpanfil.travix.mapper.CrazyAirEntityMapper;
 import pl.mpanfil.travix.mapper.EntityMapper;
+import pl.mpanfil.travix.model.CrazyAirRequest;
 import pl.mpanfil.travix.model.CrazyAirResponse;
 
 import java.util.ArrayList;
@@ -31,11 +32,12 @@ public class CrazyAirService implements SupplierService {
 
     @Override
     public List<SearchResult> search(SearchParams searchParams) {
+        CrazyAirRequest crazyAirRequest = (CrazyAirRequest) entityMapper.mapSearchParams(searchParams);
         List<SearchResult> results = new ArrayList<>();
         ResponseEntity<List<CrazyAirResponse>> responseEntity = restTemplate.exchange(
                 crazyAirServiceUrl,
                 HttpMethod.POST,
-                new HttpEntity<>(searchParams),
+                new HttpEntity<>(crazyAirRequest),
                 new ParameterizedTypeReference<List<CrazyAirResponse>>() {
                 }
         );

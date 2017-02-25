@@ -10,6 +10,7 @@ import pl.mpanfil.travix.SearchParams;
 import pl.mpanfil.travix.SearchResult;
 import pl.mpanfil.travix.mapper.EntityMapper;
 import pl.mpanfil.travix.mapper.ToughJetEntityMapper;
+import pl.mpanfil.travix.model.ToughJetRequest;
 import pl.mpanfil.travix.model.ToughJetResponse;
 
 import java.util.ArrayList;
@@ -31,11 +32,12 @@ public class ToughJetService implements SupplierService {
 
     @Override
     public List<SearchResult> search(SearchParams searchParams) {
+        ToughJetRequest toughJetRequest = (ToughJetRequest) entityMapper.mapSearchParams(searchParams);
         List<SearchResult> results = new ArrayList<>();
         ResponseEntity<List<ToughJetResponse>> responseEntity = restTemplate.exchange(
                 toughJetServiceUrl,
                 HttpMethod.POST,
-                new HttpEntity<>(searchParams),
+                new HttpEntity<>(toughJetRequest),
                 new ParameterizedTypeReference<List<ToughJetResponse>>() {
                 }
         );
