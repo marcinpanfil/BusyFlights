@@ -35,6 +35,8 @@ public class SearchIT {
                 .build()
         );
         assertEquals(2, searchResults.size());
+        assertEquals(searchResults.get(0).getSupplier(), "TOUGH JET");
+        assertEquals(searchResults.get(1).getSupplier(), "CRAZY AIR");
     }
 
 }
