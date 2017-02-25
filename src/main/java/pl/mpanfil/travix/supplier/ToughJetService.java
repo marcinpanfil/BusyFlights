@@ -43,7 +43,7 @@ public class ToughJetService implements SupplierService {
         );
         if(responseEntity.getStatusCode() == HttpStatus.OK) {
             List<ToughJetResponse> responses = responseEntity.getBody();
-            responses.stream().forEach(toughJetResponse -> results.add(entityMapper.mapSearchResult(toughJetResponse)));
+            responses.forEach(toughJetResponse -> results.add(entityMapper.mapSearchResult(toughJetResponse)));
         }
         return results;
     }

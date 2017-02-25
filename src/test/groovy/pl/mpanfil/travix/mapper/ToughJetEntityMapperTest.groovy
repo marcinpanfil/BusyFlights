@@ -14,11 +14,11 @@ import java.time.LocalDateTime
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 class ToughJetEntityMapperTest extends Specification {
 
-    ToughJetEntityMapper mapper = new ToughJetEntityMapper();
+    ToughJetEntityMapper mapper = new ToughJetEntityMapper()
 
     def 'should return valid tough jet request'() {
         given:
-        def localDateTime = LocalDateTime.of(2016, 12, 10, 10, 0);
+        def localDateTime = LocalDateTime.of(2016, 12, 10, 10, 0)
         def searchParams = new SearchParams("AMS", "LHR", localDateTime, localDateTime.plusDays(4), 3)
         when:
         def request = mapper.mapSearchParams(searchParams)

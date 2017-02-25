@@ -51,11 +51,10 @@ public class ToughJetEntityMapper implements EntityMapper<ToughJetRequest, Tough
     }
 
     private BigDecimal calculatePrize(double basePrize, double tax, double discount) {
-        BigDecimal prize = BigDecimal.valueOf(basePrize)
+        return BigDecimal.valueOf(basePrize)
                 .multiply(BigDecimal.valueOf(1 + (tax / 100)))
                 .multiply(BigDecimal.valueOf(1 - (discount / 100)))
                 .setScale(2, BigDecimal.ROUND_HALF_EVEN);
-        return prize;
     }
 
 }

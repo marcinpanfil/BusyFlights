@@ -43,7 +43,7 @@ public class CrazyAirService implements SupplierService {
         );
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             List<CrazyAirResponse> result = responseEntity.getBody();
-            result.stream().forEach(crazyAirResponse -> results.add(entityMapper.mapSearchResult(crazyAirResponse)));
+            result.forEach(crazyAirResponse -> results.add(entityMapper.mapSearchResult(crazyAirResponse)));
         }
         return results;
     }

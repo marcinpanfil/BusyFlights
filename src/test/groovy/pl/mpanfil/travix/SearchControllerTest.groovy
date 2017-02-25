@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  */
 class SearchControllerTest extends Specification {
 
-    def searchService = new DummySearchService();
+    def searchService = new DummySearchService()
     def underTest = new SearchController(searchService)
     def mockMvc = MockMvcBuilders.standaloneSetup(underTest).build()
     def objectMapper = new ObjectMapper()
@@ -41,6 +41,8 @@ class SearchControllerTest extends Specification {
         def content = jsonSlurper.parseText(response.contentAsString)
 
         then:
+        searchService.search(searchParams) >> 1
+
         response.status == HttpStatus.OK.value()
         response.contentType == MediaType.APPLICATION_JSON_UTF8_VALUE
 
