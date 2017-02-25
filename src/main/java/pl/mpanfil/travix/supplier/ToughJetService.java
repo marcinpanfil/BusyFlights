@@ -1,5 +1,11 @@
 package pl.mpanfil.travix.supplier;
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import pl.mpanfil.travix.SearchParams;
 import pl.mpanfil.travix.SearchResult;
 import pl.mpanfil.travix.mapper.EntityMapper;
@@ -15,12 +21,28 @@ import java.util.List;
 public class ToughJetService implements SupplierService {
 
     private EntityMapper entityMapper = new ToughJetEntityMapper();
+    private RestTemplate restTemplate;
+    private String toughJetServiceUrl;
+
+    public ToughJetService(RestTemplate restTemplate, String toughJetServiceUrl) {
+        this.restTemplate = restTemplate;
+        this.toughJetServiceUrl = toughJetServiceUrl;
+    }
 
     @Override
     public List<SearchResult> search(SearchParams searchParams) {
-        List<ToughJetResponse> responses = new ArrayList<>();
         List<SearchResult> results = new ArrayList<>();
-        responses.stream().forEach(toughJetResponse -> results.add(entityMapper.mapSearchResult(toughJetResponse)));
+        ResponseEntity<List<ToughJetResponse>> responseEntity = restTemplate.exchange(
+                toughJetServiceUrl,
+                HttpMethod.POST,
+                new HttpEntity<>(searchParams),
+                new ParameterizedTypeReference<List<ToughJetResponse>>() {
+                }
+        );
+        if(responseEntity.getStatusCode() == HttpStatus.OK) {
+            List<ToughJetResponse> responses = responseEntity.getBody();
+            responses.stream().forEach(toughJetResponse -> results.add(entityMapper.mapSearchResult(toughJetResponse)));
+        }
         return results;
     }
 }

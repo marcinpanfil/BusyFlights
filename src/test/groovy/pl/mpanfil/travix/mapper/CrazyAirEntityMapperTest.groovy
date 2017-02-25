@@ -5,7 +5,6 @@ import pl.mpanfil.travix.SearchParams
 import pl.mpanfil.travix.model.CrazyAirResponse
 import spock.lang.Specification
 
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 /**
@@ -23,8 +22,8 @@ class CrazyAirEntityMapperTest extends Specification {
         when:
         def request = mapper.mapSearchParams(searchParams)
         then:
-        request.departureDate == LocalDate.of(2016, 12, 10)
-        request.returnDate == LocalDate.of(2016, 12, 14)
+        request.departureDate == "12-10-2016"
+        request.returnDate == "12-14-2016"
         request.destination == "LHR"
         request.origin == "AMS"
         request.numberOfPassengers == 3
@@ -34,7 +33,7 @@ class CrazyAirEntityMapperTest extends Specification {
     def 'should return valid search result'() {
         given:
         def crazyAirResponse = new CrazyAirResponse("The Best One", 200.00, "X", "AMS", "LHR",
-                LocalDateTime.of(2016, 2, 12, 15, 34), LocalDateTime.of(2016, 2, 18, 15, 34))
+                "02-12-2016 15:34:34", "02-18-2016 15:34:34")
         when:
         def searchResult = mapper.mapSearchResult(crazyAirResponse)
         then:
@@ -43,8 +42,8 @@ class CrazyAirEntityMapperTest extends Specification {
         searchResult.destinationAirportCode == "LHR"
         searchResult.fare == BigDecimal.valueOf(200.00)
         searchResult.supplier == "CRAZY AIR"
-        searchResult.arrivalDate == LocalDateTime.of(2016, 2, 18, 15, 34)
-        searchResult.departureDate == LocalDateTime.of(2016, 2, 12, 15, 34)
+        searchResult.arrivalDate == LocalDateTime.of(2016, 2, 18, 15, 34, 34)
+        searchResult.departureDate == LocalDateTime.of(2016, 2, 12, 15, 34, 34)
     }
 
 }

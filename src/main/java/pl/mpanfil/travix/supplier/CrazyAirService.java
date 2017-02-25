@@ -1,5 +1,11 @@
 package pl.mpanfil.travix.supplier;
 
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 import pl.mpanfil.travix.SearchParams;
 import pl.mpanfil.travix.SearchResult;
 import pl.mpanfil.travix.mapper.CrazyAirEntityMapper;
@@ -15,12 +21,28 @@ import java.util.List;
 public class CrazyAirService implements SupplierService {
 
     private EntityMapper entityMapper = new CrazyAirEntityMapper();
+    private RestTemplate restTemplate;
+    private String crazyAirServiceUrl;
+
+    public CrazyAirService(RestTemplate restTemplate, String crazyAirServiceUrl) {
+        this.restTemplate = restTemplate;
+        this.crazyAirServiceUrl = crazyAirServiceUrl;
+    }
 
     @Override
     public List<SearchResult> search(SearchParams searchParams) {
-        List<CrazyAirResponse> result = new ArrayList<>();
-        List<SearchResult> searchResults = new ArrayList<>();
-        result.stream().forEach(crazyAirResponse -> searchResults.add(entityMapper.mapSearchResult(crazyAirResponse)));
-        return searchResults;
+        List<SearchResult> results = new ArrayList<>();
+        ResponseEntity<List<CrazyAirResponse>> responseEntity = restTemplate.exchange(
+                crazyAirServiceUrl,
+                HttpMethod.POST,
+                new HttpEntity<>(searchParams),
+                new ParameterizedTypeReference<List<CrazyAirResponse>>() {
+                }
+        );
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            List<CrazyAirResponse> result = responseEntity.getBody();
+            result.stream().forEach(crazyAirResponse -> results.add(entityMapper.mapSearchResult(crazyAirResponse)));
+        }
+        return results;
     }
 }
