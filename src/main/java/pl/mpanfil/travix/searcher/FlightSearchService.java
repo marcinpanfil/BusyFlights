@@ -4,6 +4,7 @@ import pl.mpanfil.travix.SearchParams;
 import pl.mpanfil.travix.SearchResult;
 import pl.mpanfil.travix.supplier.SupplierService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,7 +20,9 @@ public class FlightSearchService implements SearchService {
 
     @Override
     public List<SearchResult> search(SearchParams searchParams) {
-        return null;
+        List<SearchResult> searchResults = new ArrayList<>();
+        supplierServices.forEach(s -> searchResults.addAll(s.search(searchParams)));
+        return searchResults;
     }
 
 }
