@@ -1,11 +1,6 @@
 package pl.mpanfil.travix.supplier;
 
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import pl.mpanfil.travix.SearchParams;
 import pl.mpanfil.travix.SearchResult;
 import pl.mpanfil.travix.mapper.CrazyAirEntityMapper;
@@ -22,28 +17,25 @@ import java.util.List;
 public class CrazyAirService implements SupplierService {
 
     private EntityMapper entityMapper = new CrazyAirEntityMapper();
-    private RestTemplate restTemplate;
-    private String crazyAirServiceUrl;
+    private RestService<CrazyAirRequest, CrazyAirResponse> restService;
 
-    public CrazyAirService(RestTemplate restTemplate, String crazyAirServiceUrl) {
-        this.restTemplate = restTemplate;
-        this.crazyAirServiceUrl = crazyAirServiceUrl;
+    public CrazyAirService(RestService<CrazyAirRequest, CrazyAirResponse> restService) {
+        this.restService = restService;
     }
 
     @Override
     public List<SearchResult> search(SearchParams searchParams) {
         CrazyAirRequest crazyAirRequest = (CrazyAirRequest) entityMapper.mapSearchParams(searchParams);
         List<SearchResult> results = new ArrayList<>();
-        ResponseEntity<List<CrazyAirResponse>> responseEntity = restTemplate.exchange(
-                crazyAirServiceUrl,
-                HttpMethod.POST,
-                new HttpEntity<>(crazyAirRequest),
-                new ParameterizedTypeReference<List<CrazyAirResponse>>() {
-                }
-        );
-        if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            List<CrazyAirResponse> result = responseEntity.getBody();
-            result.forEach(crazyAirResponse -> results.add(entityMapper.mapSearchResult(crazyAirResponse)));
+        try {
+            List<CrazyAirResponse> crazyAirResponses =
+                    restService.post(crazyAirRequest,
+                            new ParameterizedTypeReference<List<CrazyAirResponse>>() {
+                            }
+                    );
+            crazyAirResponses.forEach(crazyAirResponse -> results.add(entityMapper.mapSearchResult(crazyAirResponse)));
+        } catch (RestServiceException ex) {
+            //TODO: log exception
         }
         return results;
     }
