@@ -30,8 +30,7 @@ public class RestService<T, K> {
                 reference
         );
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
-            List<K> result = responseEntity.getBody();
-            return result;
+            return responseEntity.getBody();
         } else {
             String msg = "problem with url: " + url + " status code: " + responseEntity.getStatusCode().value();
             throw new RestServiceException(msg);

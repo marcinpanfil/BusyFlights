@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class CrazyAirService implements SupplierService {
 
-    private EntityMapper entityMapper = new CrazyAirEntityMapper();
+    private final EntityMapper entityMapper = new CrazyAirEntityMapper();
     private RestService<CrazyAirRequest, CrazyAirResponse> restService;
 
     public CrazyAirService(RestService<CrazyAirRequest, CrazyAirResponse> restService) {

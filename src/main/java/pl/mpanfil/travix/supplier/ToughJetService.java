@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ToughJetService implements SupplierService {
 
-    private EntityMapper entityMapper = new ToughJetEntityMapper();
+    private final EntityMapper entityMapper = new ToughJetEntityMapper();
     private RestService<ToughJetRequest, ToughJetResponse> restService;
 
     public ToughJetService(RestService<ToughJetRequest, ToughJetResponse> restService) {
