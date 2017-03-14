@@ -1,6 +1,10 @@
 package pl.mpanfil.travix.supplier;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import pl.mpanfil.travix.SearchParams;
 import pl.mpanfil.travix.SearchResult;
 import pl.mpanfil.travix.mapper.EntityMapper;
@@ -14,13 +18,15 @@ import java.util.List;
 /**
  * Created by Marcin Panfil on 25.02.17.
  */
+@Component
 public class ToughJetService implements SupplierService {
 
     private final EntityMapper entityMapper = new ToughJetEntityMapper();
     private RestService<ToughJetRequest, ToughJetResponse> restService;
 
-    public ToughJetService(RestService<ToughJetRequest, ToughJetResponse> restService) {
-        this.restService = restService;
+    @Autowired
+    public ToughJetService(RestTemplate restTemplate, Environment environment) {
+        this.restService = new RestService<>(restTemplate, environment.getProperty("busyflight.url.toughjet"));
     }
 
     @Override

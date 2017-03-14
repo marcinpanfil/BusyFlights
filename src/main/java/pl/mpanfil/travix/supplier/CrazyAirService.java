@@ -1,6 +1,10 @@
 package pl.mpanfil.travix.supplier;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 import pl.mpanfil.travix.SearchParams;
 import pl.mpanfil.travix.SearchResult;
 import pl.mpanfil.travix.mapper.CrazyAirEntityMapper;
@@ -14,13 +18,15 @@ import java.util.List;
 /**
  * Created by Marcin Panfil on 25.02.17.
  */
+@Component
 public class CrazyAirService implements SupplierService {
 
     private final EntityMapper entityMapper = new CrazyAirEntityMapper();
     private RestService<CrazyAirRequest, CrazyAirResponse> restService;
 
-    public CrazyAirService(RestService<CrazyAirRequest, CrazyAirResponse> restService) {
-        this.restService = restService;
+    @Autowired
+    public CrazyAirService(RestTemplate restTemplate, Environment environment) {
+        this.restService = new RestService<>(restTemplate, environment.getProperty("busyflight.url.crazyair"));
     }
 
     @Override

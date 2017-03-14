@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import pl.mpanfil.travix.searcher.SearchService
-import pl.mpanfil.travix.supplier.SupplierService
 import spock.lang.Specification
 
 import java.time.LocalDateTime
@@ -112,12 +111,6 @@ class SearchControllerTest extends Specification {
     }
 
     class DummySearchService implements SearchService {
-
-        @Override
-        void registerFlightServices(List<SupplierService> supplierServices) {
-            //Do nothing
-        }
-
         @Override
         List<SearchResult> search(SearchParams searchParams) {
             List<SearchResult> searchResults = new ArrayList<>()
